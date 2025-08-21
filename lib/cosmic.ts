@@ -109,7 +109,7 @@ export async function getCategories(): Promise<Category[]> {
       .depth(0);
     
     // Ensure all categories have a color value, defaulting to a fallback if not present
-    const categories = response.objects.map(cat => {
+    const categories = response.objects.map((cat: Partial<Category>) => {
       // If category doesn't have a color, add a default one
       if (!cat.metadata?.color) {
         return {
