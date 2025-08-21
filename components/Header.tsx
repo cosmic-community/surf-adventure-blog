@@ -27,7 +27,7 @@ export default function Header({ categories }: HeaderProps) {
   };
 
   return (
-    <div className="fixed top-0 left-0 w-full z-50">
+    <div className="fixed top-0 left-0 right-0 w-full z-50">
       <header className={`w-full transition-all duration-300 ${scrolled ? 'bg-white shadow-md' : 'bg-white/90'}`}>
         <div className="container flex justify-between items-center py-4">
           {/* Logo */}
