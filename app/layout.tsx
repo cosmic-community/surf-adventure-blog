@@ -4,6 +4,7 @@ import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import CosmicBadge from '@/components/CosmicBadge';
+import { getCategories } from '@/lib/cosmic';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -12,19 +13,20 @@ export const metadata: Metadata = {
   description: 'Discover amazing surf spots, travel guides, and surf culture from around the world.',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const bucketSlug = process.env.COSMIC_BUCKET_SLUG as string;
+  const categories = await getCategories();
 
   return (
     <html lang="en">
       <body className={inter.className}>
         <div className="min-h-screen flex flex-col">
-          <Header />
-          <main className="flex-grow">
+          <Header categories={categories} />
+          <main className="flex-grow pt-[72px]">
             {children}
           </main>
           <Footer />
