@@ -1,29 +1,21 @@
-'use client';
+'use client'
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { getCategories } from '@/lib/cosmic';
+import { Category } from '@/types';
+import MobileMenu from './MobileMenu';
 
-interface Category {
-  id: string;
-  title: string;
-  slug: string;
-  metadata: {
-    color: string;
-  };
+interface HeaderProps {
+  categories: Category[];
 }
 
-export default function Header({ categories }: { categories: Category[] }) {
+export default function Header({ categories }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 10) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
+      setScrolled(window.scrollY > 10);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -32,82 +24,88 @@ export default function Header({ categories }: { categories: Category[] }) {
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+    // Prevent scrolling when menu is open
+    document.body.style.overflow = isMenuOpen ? 'auto' : 'hidden';
   };
 
+  // Close menu on route change
+  useEffect(() => {
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
+
   return (
-    <header className={`fixed top-0 left-0 right-0 bg-white border-b z-50 transition-shadow duration-300 ${scrolled ? 'shadow-md' : ''}`}>
-      <div className="container py-4">
-        <div className="flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold text-surf-blue">
-            Surf Adventure Blog
-          </Link>
-          
-          {/* Desktop Navigation */}
-          <nav className="hidden md:block">
-            <ul className="flex items-center gap-6">
-              <li>
-                <Link href="/" className="font-medium hover:text-surf-blue">
-                  Home
-                </Link>
-              </li>
-              {categories.slice(0, 4).map((category) => (
-                <li key={category.id}>
-                  <Link 
-                    href={`/categories/${category.slug}`} 
-                    className="font-medium hover:text-surf-blue"
-                    style={{ color: category.metadata.color }}
-                  >
-                    {category.title}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-          
-          {/* Mobile Menu Button */}
-          <button 
-            className="md:hidden p-2 text-gray-600 focus:outline-none" 
-            onClick={toggleMenu}
-            aria-label="Toggle menu"
-          >
-            <div className="relative w-6 h-6">
-              {/* Animated hamburger icon */}
-              <span className={`hamburger-line absolute top-0 left-0 h-0.5 w-6 bg-current transform transition-all duration-300 ease-in-out ${isMenuOpen ? 'rotate-45 top-3' : ''}`}></span>
-              <span className={`hamburger-line absolute top-2.5 left-0 h-0.5 w-6 bg-current transition-all duration-300 ease-in-out ${isMenuOpen ? 'opacity-0' : 'opacity-100'}`}></span>
-              <span className={`hamburger-line absolute top-5 left-0 h-0.5 w-6 bg-current transform transition-all duration-300 ease-in-out ${isMenuOpen ? '-rotate-45 top-3' : ''}`}></span>
-            </div>
-          </button>
-        </div>
-        
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <nav className="md:hidden py-4 border-t mt-4">
-            <ul className="flex flex-col gap-4">
-              <li>
-                <Link 
-                  href="/" 
-                  className="block font-medium hover:text-surf-blue"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Home
-                </Link>
-              </li>
-              {categories.map((category) => (
-                <li key={category.id}>
-                  <Link 
-                    href={`/categories/${category.slug}`} 
-                    className="block font-medium hover:text-surf-blue"
-                    style={{ color: category.metadata.color }}
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {category.title}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        )}
+    <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white shadow-md' : 'bg-white/90'}`}>
+      <div className="container flex justify-between items-center py-4">
+        {/* Logo */}
+        <Link href="/" className="text-2xl font-bold text-surf-blue">
+          Surf Adventure Blog
+        </Link>
+
+        {/* Desktop Navigation */}
+        <nav className="hidden md:block">
+          <ul className="flex items-center space-x-8">
+            <li>
+              <Link href="/" className="text-gray-800 hover:text-surf-blue">
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link href="/travel-guides" className="text-green-600 hover:text-green-700">
+                Travel Guides
+              </Link>
+            </li>
+            <li>
+              <Link href="/surf-spots" className="text-surf-blue hover:text-blue-600">
+                Surf Spots
+              </Link>
+            </li>
+            <li>
+              <Link href="/surf-culture" className="text-purple-600 hover:text-purple-700">
+                Surf Culture
+              </Link>
+            </li>
+            <li>
+              <Link href="/gear-reviews" className="text-amber-600 hover:text-amber-700">
+                Gear Reviews
+              </Link>
+            </li>
+          </ul>
+        </nav>
+
+        {/* Mobile Menu Button */}
+        <button 
+          className="md:hidden p-2 rounded-md hover:bg-gray-100 focus:outline-none"
+          onClick={toggleMenu}
+          aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+        >
+          <div className="relative w-6 h-6">
+            {/* Three lines transformed into X */}
+            <span
+              className={`hamburger-line absolute h-0.5 w-6 bg-gray-800 transition-all duration-300 ${
+                isMenuOpen ? 'top-3 rotate-45' : 'top-1 rotate-0'
+              }`}
+            ></span>
+            <span
+              className={`hamburger-line absolute h-0.5 w-6 bg-gray-800 transition-all duration-300 ${
+                isMenuOpen ? 'opacity-0' : 'opacity-100 top-3'
+              }`}
+            ></span>
+            <span
+              className={`hamburger-line absolute h-0.5 w-6 bg-gray-800 transition-all duration-300 ${
+                isMenuOpen ? 'top-3 -rotate-45' : 'top-5 rotate-0'
+              }`}
+            ></span>
+          </div>
+        </button>
       </div>
+
+      {/* Mobile Menu */}
+      <MobileMenu isOpen={isMenuOpen} categories={categories} onClose={() => {
+        setIsMenuOpen(false);
+        document.body.style.overflow = 'auto';
+      }} />
     </header>
   );
 }
