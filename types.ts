@@ -52,7 +52,7 @@ export interface Category extends CosmicObject {
   metadata: {
     name?: string;
     description?: string;
-    color?: string;
+    color: string | undefined; // Updated to accept undefined values
   };
 }
 
