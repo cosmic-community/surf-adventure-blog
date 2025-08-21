@@ -108,7 +108,22 @@ export async function getCategories(): Promise<Category[]> {
       .props(['id', 'title', 'slug', 'metadata'])
       .depth(0);
     
-    return response.objects as Category[];
+    // Ensure all categories have a color value, defaulting to a fallback if not present
+    const categories = response.objects.map(cat => {
+      // If category doesn't have a color, add a default one
+      if (!cat.metadata?.color) {
+        return {
+          ...cat,
+          metadata: {
+            ...cat.metadata,
+            color: '#6B7280' // Default gray color
+          }
+        };
+      }
+      return cat;
+    }) as Category[];
+    
+    return categories;
   } catch (error) {
     if (hasStatus(error) && error.status === 404) {
       return []; // Return empty array if no categories found
@@ -127,6 +142,17 @@ export async function getCategoryBySlug(slug: string): Promise<Category | null> 
         slug: slug,
       })
       .props(['id', 'title', 'slug', 'metadata']);
+    
+    // If category exists but doesn't have a color, add a default one
+    if (response.object && !response.object.metadata?.color) {
+      return {
+        ...response.object,
+        metadata: {
+          ...response.object.metadata,
+          color: '#6B7280' // Default gray color
+        }
+      } as Category;
+    }
     
     return response.object as Category;
   } catch (error) {

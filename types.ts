@@ -52,7 +52,7 @@ export interface Category extends CosmicObject {
   metadata: {
     name?: string;
     description?: string;
-    color?: string; // Making color optional to match actual data structure
+    color: string; // Changed to required string to match expected usage
   };
 }
 
