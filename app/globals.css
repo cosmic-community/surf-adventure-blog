@@ -56,4 +56,9 @@ body {
   .category-badge {
     @apply text-xs font-medium px-2.5 py-0.5 rounded;
   }
+  
+  /* Hamburger menu animation styles */
+  .hamburger-line {
+    transform-origin: center;
+  }
 }
