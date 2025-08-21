@@ -68,25 +68,24 @@ export default function Header({ categories }: HeaderProps) {
 
           {/* Mobile Menu Button */}
           <button 
-            className="md:hidden p-2 rounded-md hover:bg-gray-100 focus:outline-none"
+            className="md:hidden p-2 rounded-md hover:bg-gray-100 focus:outline-none flex items-center justify-center"
             onClick={toggleMenu}
             aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
           >
-            <div className="relative w-6 h-6">
-              {/* Three lines transformed into X */}
+            <div className="w-6 h-6 relative flex items-center justify-center">
               <span
-                className={`hamburger-line absolute h-0.5 w-6 bg-gray-800 transition-all duration-300 ${
-                  isMenuOpen ? 'top-3 rotate-45' : 'top-1 rotate-0'
+                className={`absolute h-0.5 bg-gray-800 transition-all duration-300 ${
+                  isMenuOpen ? 'w-6 rotate-45' : 'w-6 -translate-y-2'
                 }`}
               ></span>
               <span
-                className={`hamburger-line absolute h-0.5 w-6 bg-gray-800 transition-all duration-300 ${
-                  isMenuOpen ? 'opacity-0' : 'opacity-100 top-3'
+                className={`absolute h-0.5 w-6 bg-gray-800 transition-all duration-300 ${
+                  isMenuOpen ? 'opacity-0' : 'opacity-100'
                 }`}
               ></span>
               <span
-                className={`hamburger-line absolute h-0.5 w-6 bg-gray-800 transition-all duration-300 ${
-                  isMenuOpen ? 'top-3 -rotate-45' : 'top-5 rotate-0'
+                className={`absolute h-0.5 bg-gray-800 transition-all duration-300 ${
+                  isMenuOpen ? 'w-6 -rotate-45' : 'w-6 translate-y-2'
                 }`}
               ></span>
             </div>
